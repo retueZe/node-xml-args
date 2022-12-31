@@ -1,0 +1,31 @@
+{
+  "private": true,
+  "name": "xml-args",
+  "description": "Declarative CLI input parser.",
+  "keywords": [
+    "args",
+    "commander",
+    "cli",
+    "parser",
+    "argument",
+    "args",
+    "argv",
+    "util",
+    "bin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/retueZe/node-xml-args"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "async-option": "^1.11.0"
+  }
+}

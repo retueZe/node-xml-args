@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:simpleType name="letter">
+        <xs:restriction base="xs:string">
+            <xs:length value="1"/>
+            <xs:pattern value="[a-zA-Z]"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="alias">
+        <xs:list itemType="name"/>
+    </xs:simpleType>
+    <xs:simpleType name="optionType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="common"/>
+            <xs:enumeration value="switch"/>
+            <xs:enumeration value="arrayBuilder"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="optionPosition">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="name">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:pattern value="[a-z][a-z\d-]*"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="valueType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="string"/>
+            <xs:enumeration value="float"/>
+            <xs:enumeration value="integer"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="unbounded">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="unbounded"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="integerBoundary">
+        <xs:union memberTypes="xs:integer unbounded"/>
+    </xs:simpleType>
+    <xs:simpleType name="floatBoundary">
+        <xs:union memberTypes="xs:float unbounded"/>
+    </xs:simpleType>
+    <xs:simpleType name="length">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="alias" type="alias"/>
+    <xs:element name="summary" type="xs:token"/>
+    <xs:element name="description">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="p" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType mixed="true">
+                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="b" type="xs:token"/>
+                            <xs:element name="link" type="xs:anyURI"/>
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:group name="executableContent">
+        <xs:sequence>
+            <xs:element ref="summary" minOccurs="0"/>
+            <xs:element ref="description" minOccurs="0"/>
+            <xs:element ref="arg" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="option" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="command" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:group>
+    <xs:attributeGroup name="nameableeAttributes">
+        <xs:attribute name="name" type="name"/>
+        <xs:attribute name="letter" type="letter"/>
+    </xs:attributeGroup>
+    <xs:attributeGroup name="executableAttributes">
+        <xs:attribute name="x" type="xs:string"/>
+    </xs:attributeGroup>
+    <xs:element name="arg">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="alias" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="nameableeAttributes"/>
+            <xs:attribute name="optional" type="xs:boolean"/>
+            <xs:attribute name="spreading" type="xs:boolean"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="option">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="restriction" minOccurs="0"/>
+                <xs:element ref="alias" minOccurs="0"/>
+                <xs:element ref="summary" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="nameableeAttributes"/>
+            <xs:attribute name="type" type="optionType"/>
+            <!-- common options specific attributes -->
+            <xs:attribute name="default" type="xs:string"/>
+            <xs:attribute name="required" type="xs:boolean"/>
+            <!-- switch options specific attributes -->
+            <xs:attribute name="initial" type="xs:boolean"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="assertion">
+        <xs:complexType>
+            <xs:attribute name="value" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="restriction">
+        <xs:complexType>
+            <xs:choice>
+                <!-- string restrictions -->
+                <xs:sequence>
+                    <xs:element name="minLength" minOccurs="0">
+                        <xs:complexType>
+                            <xs:attribute name="value" type="length" use="required"/>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="maxLength" minOccurs="0">
+                        <xs:complexType>
+                            <xs:attribute name="value" type="length" use="required"/>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="pattern" minOccurs="0">
+                        <xs:complexType>
+                            <xs:attribute name="value" type="xs:string" use="required"/>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+                <!-- integer restrictions -->
+                <xs:sequence>
+                    <xs:element name="minInteger" minOccurs="0">
+                        <xs:complexType>
+                            <xs:attribute name="value" type="integerBoundary" use="required"/>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="maxInteger" minOccurs="0">
+                        <xs:complexType>
+                            <xs:attribute name="value" type="integerBoundary" use="required"/>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element ref="assertion" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+                <!-- float restrictions -->
+                <xs:sequence>
+                    <xs:element name="minFloat" minOccurs="0">
+                        <xs:complexType>
+                            <xs:attribute name="value" type="floatBoundary" use="required"/>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="maxFloat" minOccurs="0">
+                        <xs:complexType>
+                            <xs:attribute name="value" type="floatBoundary" use="required"/>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element ref="assertion" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:choice>
+            <xs:attribute name="type" type="valueType" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="command">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="alias" minOccurs="0"/>
+                <xs:group ref="executableContent"/>
+            </xs:sequence>
+            <xs:attribute name="name" type="name" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="program">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:group ref="executableContent"/>
+            </xs:sequence>
+            <xs:attribute name="version" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
