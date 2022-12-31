@@ -7,8 +7,6 @@
         "quotes": ["error", "single"],
         "semi": ["error", "never"],
         "no-console": "warn",
-        "@typescript-eslint/no-non-null-assertion": "off",
-        "@typescript-eslint/no-explicit-any": "off",
-        "require-yield": "off"
+        "@typescript-eslint/no-explicit-any": "off"
     }
 }

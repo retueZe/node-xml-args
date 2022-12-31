@@ -59,7 +59,7 @@
                 <xs:element name="p" minOccurs="0" maxOccurs="unbounded">
                     <xs:complexType mixed="true">
                         <xs:choice minOccurs="0" maxOccurs="unbounded">
-                            <xs:element name="b" type="xs:token"/>
+                            <xs:element name="highlighted" type="xs:token"/>
                             <xs:element name="link" type="xs:anyURI"/>
                         </xs:choice>
                     </xs:complexType>
@@ -76,19 +76,16 @@
             <xs:element ref="command" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:group>
-    <xs:attributeGroup name="nameableeAttributes">
+    <xs:attributeGroup name="aliasableAttributes">
         <xs:attribute name="name" type="name"/>
         <xs:attribute name="letter" type="letter"/>
-    </xs:attributeGroup>
-    <xs:attributeGroup name="executableAttributes">
-        <xs:attribute name="x" type="xs:string"/>
     </xs:attributeGroup>
     <xs:element name="arg">
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="alias" minOccurs="0"/>
             </xs:sequence>
-            <xs:attributeGroup ref="nameableeAttributes"/>
+            <xs:attributeGroup ref="aliasableAttributes"/>
             <xs:attribute name="optional" type="xs:boolean"/>
             <xs:attribute name="spreading" type="xs:boolean"/>
         </xs:complexType>
@@ -100,7 +97,7 @@
                 <xs:element ref="alias" minOccurs="0"/>
                 <xs:element ref="summary" minOccurs="0"/>
             </xs:sequence>
-            <xs:attributeGroup ref="nameableeAttributes"/>
+            <xs:attributeGroup ref="aliasableAttributes"/>
             <xs:attribute name="type" type="optionType"/>
             <!-- common options specific attributes -->
             <xs:attribute name="default" type="xs:string"/>
